@@ -4,7 +4,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { migrate, ping } from './src/store.mjs';
+import { migrate, ping, dbDiagnostics } from './src/store.mjs';
 import tiktokContact from './src/handlers/tiktok-contact.mjs';
 import trackView from './src/handlers/track-view.mjs';
 import adminApi from './src/handlers/admin-api.mjs';
@@ -66,9 +66,12 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (url.pathname === '/healthz') {
-      let db = false; try { await ping(); db = true; } catch {}
+      let db = false, err = null;
+      try { await ping(); db = true; } catch (e) { err = e; }
+      const body = { ok: true, db };
+      if (!db) body.db_check = dbDiagnostics(err);
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-      return res.end(JSON.stringify({ ok: true, db }));
+      return res.end(JSON.stringify(body));
     }
 
     const handler = ROUTES[url.pathname.replace(/\/+$/, '')];

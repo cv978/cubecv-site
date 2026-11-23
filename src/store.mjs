@@ -38,6 +38,19 @@ export async function migrate() {
 
 export async function ping() { await (await getDb()).query('SELECT 1'); }
 
+// Safe diagnostics for /healthz: an error code and URL shape only — never the URL or password.
+export function dbDiagnostics(err) {
+  const raw = process.env.DATABASE_URL || '';
+  let url_ok = false;
+  try { url_ok = /^postgres(ql)?:$/.test(new URL(raw.trim()).protocol); } catch {}
+  return {
+    url_set: raw.length > 0,
+    url_ok,
+    url_has_whitespace_or_quotes: /^\s|\s$|["']/.test(raw),
+    error: err ? String(err.code || err.name || 'Error').slice(0, 40) : null,
+  };
+}
+
 export const riyadhDay = (ms) => new Date(ms + TZ_OFFSET_MS).toISOString().slice(0, 10);
 const clean = (v, max = 40) => {
   const s = String(v || '').replace(/[^A-Za-z0-9.\- ]/g, '').trim().slice(0, max);
