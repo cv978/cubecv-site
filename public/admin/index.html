@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>لوحة متابعة الموقع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f7fb; --surface: #ffffff; --border: #e5e7ee; --grid: #eceef3;
+  --text: #0f172a; --text-2: #52514e; --muted: #7a7c85;
+  --brand: #1a2a6c; --accent: #25D366;
+  --s1: #2a78d6; --s2: #eb6834;
+  --danger: #c43c3b; --track: #eef0f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --bg: #121212; --surface: #1a1a19; --border: #2c2c2a; --grid: #262624;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #94938b;
+    --brand: #9fb2ff; --s1: #3987e5; --s2: #d95926; --danger: #e66767; --track: #2a2a28;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121212; --surface: #1a1a19; --border: #2c2c2a; --grid: #262624;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #94938b;
+  --brand: #9fb2ff; --s1: #3987e5; --s2: #d95926; --danger: #e66767; --track: #2a2a28;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+button, input, select { font: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* login */
+#login { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+#login[hidden] { display: none; }
+.login-card { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+.login-card h1 { font-size: 22px; font-weight: 800; color: var(--brand); margin-bottom: 4px; }
+.login-card p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+label { display: block; font-size: 14px; font-weight: 700; color: var(--text-2); margin: 14px 0 6px; }
+input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text); font-size: 16px; }
+input:focus { outline: 2px solid var(--s1); outline-offset: 1px; }
+.btn { border: 0; border-radius: 10px; padding: 12px 16px; font-weight: 800; cursor: pointer; }
+.btn-primary { width: 100%; margin-top: 22px; background: var(--brand); color: #fff; font-size: 16px; }
+:root[data-theme="dark"] .btn-primary { color: #121212; }
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .btn-primary { color: #121212; } }
+.btn-primary:disabled { opacity: .6; cursor: wait; }
+.err { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 700; }
+
+/* dashboard */
+#app { display: none; max-width: 1200px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+header h1 { font-size: 22px; font-weight: 800; color: var(--brand); }
+header .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+.seg button { border: 0; background: transparent; color: var(--text-2); padding: 7px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; }
+.seg button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+:root[data-theme="dark"] .seg button[aria-pressed="true"] { color: #121212; }
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .seg button[aria-pressed="true"] { color: #121212; } }
+.btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text-2); padding: 8px 12px; font-size: 14px; }
+
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.tile .k { color: var(--muted); font-size: 13px; font-weight: 700; }
+.tile .v { font-size: 30px; font-weight: 800; margin-top: 6px; line-height: 1.1; }
+.tile .h { color: var(--text-2); font-size: 13px; margin-top: 6px; }
+.tile.hero { border-color: var(--accent); }
+.tile.hero .v { color: var(--text); }
+
+.grid { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; min-width: 0; }
+.card h2 { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+.card .note { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-inline-end: 6px; vertical-align: -1px; }
+
+.chart { position: relative; direction: ltr; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { fill: var(--muted); font-size: 11px; font-family: inherit; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 13px; box-shadow: 0 6px 18px rgba(0,0,0,.12); white-space: nowrap; direction: rtl; display: none; z-index: 5; color: var(--text); }
+.tip b { display: block; margin-bottom: 4px; }
+.tip .row { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
+.tip .row i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
+.rank { list-style: none; }
+.rank li { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 7px 0; font-size: 14px; }
+.rank .name { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank .cnt { color: var(--text-2); font-weight: 700; }
+.rank .track { grid-column: 1 / -1; height: 6px; background: var(--track); border-radius: 4px; overflow: hidden; }
+.rank .fill { height: 100%; background: var(--s1); border-radius: 4px; }
+.empty { color: var(--muted); font-size: 14px; padding: 12px 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: start; color: var(--muted); font-weight: 700; font-size: 12px; padding: 8px 6px; border-bottom: 1px solid var(--border); }
+td { padding: 9px 6px; border-bottom: 1px solid var(--grid); color: var(--text-2); }
+td:first-child { color: var(--text); }
+.pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--border); color: var(--text-2); }
+.pill.ad { border-color: var(--s2); }
+.table-wrap { overflow-x: auto; }
+
+.status { color: var(--muted); font-size: 13px; text-align: center; padding: 30px 0; }
+
+@media (max-width: 900px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .grid, .grid-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) {
+  .tile .v { font-size: 24px; }
+  .seg button { padding: 7px 9px; }
+}
+</style>
+</head>
+<body>
+
+<section id="login" hidden>
+  <form class="login-card" id="loginForm" autocomplete="on">
+    <h1>لوحة متابعة الموقع</h1>
+    <p>سجّل الدخول لمتابعة الزيارات وضغطات واتساب.</p>
+    <label for="email">البريد الإلكتروني</label>
+    <input id="email" type="email" autocomplete="username" required dir="ltr">
+    <label for="password">كلمة المرور</label>
+    <input id="password" type="password" autocomplete="current-password" required dir="ltr">
+    <button class="btn btn-primary" id="loginBtn" type="submit">دخول</button>
+    <div class="err" id="loginErr" role="alert"></div>
+  </form>
+</section>
+
+<main id="app">
+  <header>
+    <div>
+      <h1>لوحة متابعة الموقع</h1>
+      <div class="sub" id="updated">—</div>
+    </div>
+    <div class="bar">
+      <div class="seg" role="group" aria-label="الفترة">
+        <button data-days="1">اليوم</button>
+        <button data-days="7">7 أيام</button>
+        <button data-days="30">30 يوم</button>
+        <button data-days="90">90 يوم</button>
+      </div>
+      <button class="btn btn-ghost" id="refresh">تحديث</button>
+      <button class="btn btn-ghost" id="logout">خروج</button>
+    </div>
+  </header>
+
+  <div class="tiles">
+    <div class="tile hero"><div class="k">ضغطات واتساب</div><div class="v num" id="tClicks">0</div><div class="h" id="tClicksH"></div></div>
+    <div class="tile"><div class="k">الزيارات</div><div class="v num" id="tViews">0</div><div class="h" id="tViewsH"></div></div>
+    <div class="tile"><div class="k">نسبة التحويل</div><div class="v num" id="tRate">0%</div><div class="h">ضغطات ÷ زيارات</div></div>
+    <div class="tile"><div class="k">من إعلانات TikTok</div><div class="v num" id="tAd">0</div><div class="h" id="tAdH"></div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>الزيارات والضغطات يوميًا</h2>
+      <div class="note">بتوقيت الرياض</div>
+      <div class="legend"><span><i style="background:var(--s1)"></i>الزيارات</span><span><i style="background:var(--s2)"></i>ضغطات واتساب</span></div>
+      <div class="chart" id="dailyChart"></div>
+    </div>
+    <div class="card">
+      <h2>ضغطات واتساب حسب الساعة</h2>
+      <div class="note">أفضل أوقات تواصل العملاء</div>
+      <div class="chart" id="hourChart"></div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card"><h2>مصادر الزيارات</h2><div class="note">من أين يأتي الزوار</div><ul class="rank" id="rSources"></ul></div>
+    <div class="card"><h2>الأجهزة</h2><div class="note">لضغطات واتساب</div><ul class="rank" id="rDevices"></ul></div>
+    <div class="card"><h2>المدن والدول</h2><div class="note">لضغطات واتساب</div><ul class="rank" id="rPlaces"></ul></div>
+  </div>
+
+  <div class="card">
+    <h2>آخر ضغطات واتساب</h2>
+    <div class="note">آخر 50 ضغطة في الفترة المحددة</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الوقت</th><th>الجهاز</th><th>المكان</th><th>المصدر</th></tr></thead>
+        <tbody id="recent"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div class="status" id="status">جارٍ التحميل…</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var state = { days: 7, data: null, timer: null };
+  try { var saved = Number(localStorage.getItem('cubecv_admin_days')); if ([1,7,30,90].indexOf(saved) !== -1) state.days = saved; } catch (e) {}
+
+  var nf = new Intl.NumberFormat('ar-SA-u-nu-latn');
+  var fmt = function (n) { return nf.format(n); };
+  var regionName = (function () { try { var d = new Intl.DisplayNames(['ar'], { type: 'region' }); return function (c) { try { return d.of(c); } catch (e) { return c; } }; } catch (e) { return function (c) { return c; }; } })();
+  var DEVICE = { mobile: 'جوال', desktop: 'كمبيوتر', tablet: 'تابلت' };
+  var CITY_AR = { Riyadh: 'الرياض', Jeddah: 'جدة', Mecca: 'مكة', Makkah: 'مكة', Medina: 'المدينة', Dammam: 'الدمام', Khobar: 'الخبر', 'Al-Khobar': 'الخبر', Dhahran: 'الظهران', Taif: 'الطائف', Tabuk: 'تبوك', Buraidah: 'بريدة', Abha: 'أبها', 'Khamis-Mushait': 'خميس مشيط', Hail: 'حائل', Najran: 'نجران', Jazan: 'جازان', Jizan: 'جازان', Yanbu: 'ينبع', Hofuf: 'الهفوف', 'Al-Hofuf': 'الهفوف', Jubail: 'الجبيل', Qatif: 'القطيف', 'Al-Kharj': 'الخرج', Unaizah: 'عنيزة', Arar: 'عرعر', Sakaka: 'سكاكا', Kuwait: 'الكويت', Dubai: 'دبي', 'Abu-Dhabi': 'أبوظبي', Doha: 'الدوحة', Manama: 'المنامة', Muscat: 'مسقط', Cairo: 'القاهرة', Amman: 'عمّان' };
+  var cityName = function (c) { return CITY_AR[c] || CITY_AR[String(c).replace(/\s+/g, '-')] || c; };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var timeFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { timeZone: 'Asia/Riyadh', dateStyle: 'medium', timeStyle: 'short' });
+  var dayFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+
+  function show(view) {
+    $('login').hidden = view !== 'login';
+    $('app').style.display = view === 'app' ? 'block' : 'none';
+    $('status').style.display = view === 'loading' ? 'block' : 'none';
+  }
+
+  async function load() {
+    try {
+      var r = await fetch('/api/admin/stats?days=' + state.days, { credentials: 'same-origin', cache: 'no-store' });
+      if (r.status === 401) { stopTimer(); show('login'); return; }
+      if (r.status === 503) { show('loading'); $('status').textContent = 'اللوحة غير مفعّلة بعد: أضف ADMIN_EMAIL و ADMIN_PASSWORD في إعدادات Netlify.'; return; }
+      if (!r.ok) throw new Error('http ' + r.status);
+      state.data = await r.json();
+      render(state.data);
+      show('app');
+      startTimer();
+    } catch (e) {
+      if (!state.data) { show('loading'); $('status').textContent = 'تعذّر تحميل البيانات. حاول مرة أخرى.'; }
+    }
+  }
+  function startTimer() { stopTimer(); state.timer = setInterval(load, 60000); }
+  function stopTimer() { if (state.timer) clearInterval(state.timer); state.timer = null; }
+
+  function render(d) {
+    var t = d.totals;
+    $('tClicks').textContent = fmt(t.clicks);
+    $('tClicksH').textContent = fmt(t.click_visitors) + ' زائر مختلف';
+    $('tViews').textContent = fmt(t.views);
+    $('tViewsH').textContent = fmt(t.visitors) + ' زائر مختلف';
+    $('tRate').textContent = t.views ? (Math.round(t.clicks / t.views * 1000) / 10) + '%' : '—';
+    $('tAd').textContent = fmt(t.ad_clicks);
+    $('tAdH').textContent = 'ضغطة من ' + fmt(t.ad_views) + ' زيارة إعلانية';
+    $('updated').textContent = 'آخر تحديث: ' + timeFmt.format(new Date(d.generated_at)) + ' · يتحدث تلقائيًا كل دقيقة';
+    document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(Number(b.dataset.days) === state.days)); });
+
+    if (d.days === 1) renderHourlyAsDaily(d); else lineChart($('dailyChart'), d.daily);
+    barChart($('hourChart'), d.hourly);
+    rank($('rSources'), d.sources.map(function (s) { return { name: s.name, count: s.count }; }));
+    rank($('rDevices'), d.devices.map(function (s) { return { name: DEVICE[s.name] || s.name, count: s.count }; }));
+    var places = d.cities.length && d.cities[0].name !== 'غير معروف' ? d.cities.map(function (c) { return { name: cityName(c.name), count: c.count }; }) :d.countries.map(function (c) { return { name: c.name === 'غير معروف' ? c.name : regionName(c.name), count: c.count }; });
+    rank($('rPlaces'), places);
+
+    $('recent').innerHTML = d.recent.length ? d.recent.map(function (e) {
+      var place = [e.city ? cityName(e.city) : '', e.country ? regionName(e.country) : ''].filter(Boolean).join('، ') || '—';
+      var src = e.ad ? '<span class="pill ad">إعلان TikTok</span>' : (e.ref ? '<span class="pill">' + esc(e.ref) + '</span>' : '<span class="pill">مباشر</span>');
+      return '<tr><td class="num">' + esc(timeFmt.format(new Date(e.ts))) + '</td><td>' + esc((DEVICE[e.device] || e.device || '—') + (e.os ? ' · ' + e.os : '')) + '</td><td>' + esc(place) + '</td><td>' + src + '</td></tr>';
+    }).join('') : '<tr><td colspan="4" class="empty">لا توجد ضغطات في هذه الفترة بعد.</td></tr>';
+  }
+
+  // "Today": show today's single point as a simple two-bar comparison instead of a one-point line.
+  function renderHourlyAsDaily(d) {
+    var day = d.daily[d.daily.length - 1] || { views: 0, clicks: 0 };
+    var el = $('dailyChart');
+    var max = Math.max(day.views, day.clicks, 1);
+    var W = 600, H = 220, pad = { l: 36, r: 12, t: 12, b: 28 };
+    var bw = 80, cx = [W * 0.35, W * 0.65];
+    var y = function (v) { return pad.t + (H - pad.t - pad.b) * (1 - v / niceMax(max)); };
+    var svg = gridSvg(W, H, pad, niceMax(max));
+    [[day.views, 'var(--s1)', 'الزيارات'], [day.clicks, 'var(--s2)', 'ضغطات واتساب']].forEach(function (v, i) {
+      var top = y(v[0]), base = H - pad.b;
+      svg += roundTopBar(cx[i] - bw / 2, top, bw, base - top, v[1]);
+      svg += '<text x="' + cx[i] + '" y="' + (top - 6) + '" text-anchor="middle" style="fill:var(--text);font-weight:700;font-size:13px">' + fmt(v[0]) + '</text>';
+      svg += '<text x="' + cx[i] + '" y="' + (H - 8) + '" text-anchor="middle">' + v[2] + '</text>';
+    });
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="زيارات وضغطات اليوم">' + svg + '</svg>';
+  }
+
+  function niceMax(v) {
+    if (v <= 4) return 4;
+    var p = Math.pow(10, Math.floor(Math.log10(v))), n = v / p;
+    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p;
+  }
+  function gridSvg(W, H, pad, max) {
+    var s = '';
+    for (var i = 0; i <= 4; i++) {
+      var val = max * i / 4, yy = pad.t + (H - pad.t - pad.b) * (1 - i / 4);
+      s += '<line x1="' + pad.l + '" x2="' + (W - pad.r) + '" y1="' + yy + '" y2="' + yy + '" stroke="var(--grid)" stroke-width="1"/>';
+      s += '<text x="' + (pad.l - 6) + '" y="' + (yy + 4) + '" text-anchor="end">' + fmt(Math.round(val)) + '</text>';
+    }
+    return s;
+  }
+  function roundTopBar(x, y, w, h, color) {
+    if (h <= 0) return '';
+    var r = Math.min(4, w / 2, h);
+    return '<path d="M' + x + ',' + (y + h) + 'V' + (y + r) + 'Q' + x + ',' + y + ' ' + (x + r) + ',' + y + 'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) + 'V' + (y + h) + 'Z" fill="' + color + '"/>';
+  }
+
+  function tooltip(el) {
+    var tip = el.querySelector('.tip');
+    if (!tip) { tip = document.createElement('div'); tip.className = 'tip'; el.appendChild(tip); }
+    return tip;
+  }
+  function placeTip(el, tip, px, py) {
+    var w = el.clientWidth, tw = tip.offsetWidth;
+    var left = px + 14; if (left + tw > w) left = px - tw - 14; if (left < 0) left = 0;
+    tip.style.left = left + 'px'; tip.style.top = Math.max(0, py - 10) + 'px';
+  }
+
+  function lineChart(el, rows) {
+    var W = 600, H = 220, pad = { l: 36, r: 12, t: 12, b: 28 };
+    var max = niceMax(Math.max(1, Math.max.apply(null, rows.map(function (r) { return Math.max(r.views, r.clicks); }))));
+    var n = rows.length, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+    var x = function (i) { return pad.l + (n === 1 ? iw / 2 : iw * i / (n - 1)); };
+    var y = function (v) { return pad.t + ih * (1 - v / max); };
+    var path = function (k) { return rows.map(function (r, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(r[k]).toFixed(1); }).join(''); };
+    var svg = gridSvg(W, H, pad, max);
+    var step = Math.max(1, Math.ceil(n / 7));
+    rows.forEach(function (r, i) {
+      if (i % step === 0 || i === n - 1) svg += '<text x="' + x(i) + '" y="' + (H - 8) + '" text-anchor="middle">' + dayFmt.format(new Date(r.day + 'T00:00:00Z')) + '</text>';
+    });
+    svg += '<path d="' + path('views') + '" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    svg += '<path d="' + path('clicks') + '" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    svg += '<line id="xh" y1="' + pad.t + '" y2="' + (H - pad.b) + '" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/>';
+    svg += '<circle id="d1" r="4.5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/><circle id="d2" r="4.5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>';
+    svg += '<rect x="' + pad.l + '" y="0" width="' + iw + '" height="' + H + '" fill="transparent" id="hit"/>';
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="الزيارات والضغطات يوميًا">' + svg + '</svg>';
+
+    var s = el.querySelector('svg'), tip = tooltip(el);
+    var xh = s.querySelector('#xh'), d1 = s.querySelector('#d1'), d2 = s.querySelector('#d2');
+    function move(ev) {
+      var b = s.getBoundingClientRect(), scale = W / b.width;
+      var mx = (ev.clientX - b.left) * scale;
+      var i = Math.max(0, Math.min(n - 1, Math.round((mx - pad.l) / (n === 1 ? 1 : iw / (n - 1)))));
+      var r = rows[i];
+      [xh, d1, d2].forEach(function (e) { e.setAttribute('visibility', 'visible'); });
+      xh.setAttribute('x1', x(i)); xh.setAttribute('x2', x(i));
+      d1.setAttribute('cx', x(i)); d1.setAttribute('cy', y(r.views));
+      d2.setAttribute('cx', x(i)); d2.setAttribute('cy', y(r.clicks));
+      var rate = r.views ? ' (' + (Math.round(r.clicks / r.views * 1000) / 10) + '%)' : '';
+      tip.innerHTML = '<b>' + dayFmt.format(new Date(r.day + 'T00:00:00Z')) + '</b><div class="row"><i style="background:var(--s1)"></i>الزيارات: ' + fmt(r.views) + '</div><div class="row"><i style="background:var(--s2)"></i>ضغطات واتساب: ' + fmt(r.clicks) + rate + '</div>';
+      tip.style.display = 'block';
+      placeTip(el, tip, x(i) / scale, Math.min(y(r.views), y(r.clicks)) / scale);
+    }
+    function leave() { tip.style.display = 'none'; [xh, d1, d2].forEach(function (e) { e.setAttribute('visibility', 'hidden'); }); }
+    s.addEventListener('pointermove', move); s.addEventListener('pointerleave', leave);
+  }
+
+  function barChart(el, rows) {
+    var W = 360, H = 220, pad = { l: 28, r: 6, t: 12, b: 28 };
+    var max = niceMax(Math.max(1, Math.max.apply(null, rows.map(function (r) { return r.clicks; }))));
+    var iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, slot = iw / 24, bw = Math.max(2, slot - 2);
+    var y = function (v) { return pad.t + ih * (1 - v / max); };
+    var svg = gridSvg(W, H, pad, max);
+    rows.forEach(function (r, i) {
+      var top = y(r.clicks), bx = pad.l + i * slot + 1;
+      svg += roundTopBar(bx, top, bw, H - pad.b - top, 'var(--s2)');
+      svg += '<rect class="hb" data-i="' + i + '" x="' + (pad.l + i * slot) + '" y="' + pad.t + '" width="' + slot + '" height="' + ih + '" fill="transparent"/>';
+      if (i % 6 === 0) svg += '<text x="' + (bx + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle">' + i + ':00</text>';
+    });
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="ضغطات واتساب حسب الساعة">' + svg + '</svg>';
+    var s = el.querySelector('svg'), tip = tooltip(el);
+    s.querySelectorAll('.hb').forEach(function (h) {
+      h.addEventListener('pointerenter', function () {
+        var i = Number(h.dataset.i), r = rows[i], scale = W / s.getBoundingClientRect().width;
+        tip.innerHTML = '<b>' + i + ':00 – ' + (i + 1) % 24 + ':00</b><div class="row"><i style="background:var(--s2)"></i>' + fmt(r.clicks) + ' ضغطة</div>';
+        tip.style.display = 'block';
+        placeTip(el, tip, (pad.l + i * slot + slot / 2) / scale, y(r.clicks) / scale);
+      });
+    });
+    s.addEventListener('pointerleave', function () { tip.style.display = 'none'; });
+  }
+
+  function rank(el, items) {
+    if (!items.length) { el.innerHTML = '<li class="empty">لا توجد بيانات بعد.</li>'; return; }
+    var max = items[0].count || 1;
+    el.innerHTML = items.map(function (it) {
+      return '<li><span class="name">' + esc(it.name) + '</span><span class="cnt num">' + fmt(it.count) + '</span><span class="track"><span class="fill" style="display:block;width:' + Math.max(2, it.count / max * 100) + '%"></span></span></li>';
+    }).join('');
+  }
+
+  $('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = $('loginBtn'); btn.disabled = true; $('loginErr').textContent = '';
+    try {
+      var r = await fetch('/api/admin/login', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: $('email').value, password: $('password').value }) });
+      var j = await r.json().catch(function () { return {}; });
+      if (r.ok) { $('password').value = ''; show('loading'); $('status').textContent = 'جارٍ التحميل…'; await load(); }
+      else if (r.status === 429) $('loginErr').textContent = 'محاولات كثيرة. حاول بعد ' + (j.retry_after_min || 15) + ' دقيقة.';
+      else if (r.status === 503) $('loginErr').textContent = 'اللوحة غير مفعّلة بعد في إعدادات Netlify.';
+      else $('loginErr').textContent = 'البريد أو كلمة المرور غير صحيحة.';
+    } catch (err) { $('loginErr').textContent = 'تعذّر الاتصال. حاول مرة أخرى.'; }
+    btn.disabled = false;
+  });
+
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      state.days = Number(b.dataset.days);
+      try { localStorage.setItem('cubecv_admin_days', String(state.days)); } catch (e) {}
+      load();
+    });
+  });
+  $('refresh').addEventListener('click', load);
+  $('logout').addEventListener('click', async function () {
+    stopTimer();
+    try { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
+    state.data = null; show('login');
+  });
+
+  show('loading');
+  load();
+})();
+</script>
+</body>
+</html>
